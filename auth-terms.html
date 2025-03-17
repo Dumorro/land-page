@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMR Tech - Autenticação OAuth Google</title>
+    <style>
+        :root {
+            --primary-color: #1E5EF3;
+            --secondary-color: #0F3999;
+            --accent-color: #58A8FF;
+            --dark-color: #333333;
+            --light-color: #FFFFFF;
+            --grey-color: #F5F5F5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: var(--dark-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .logo span {
+            color: var(--secondary-color);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #1E5EF3 0%, #0F3999 100%);
+            color: var(--light-color);
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--light-color);
+            color: var(--light-color);
+            margin-left: 15px;
+        }
+        
+        .features {
+            padding: 80px 0;
+            background-color: var(--grey-color);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-header h2 {
+            font-size: 36px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .section-header p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #666;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background-color: var(--light-color);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .feature-card p {
+            color: #666;
+        }
+        
+        .process {
+            padding: 80px 0;
+        }
+        
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #e0e0e0;
+            z-index: -1;
+        }
+        
+        .step {
+            text-align: center;
+            width: 150px;
+        }
+        
+        .step-number {
+            width: 100px;
+            height: 100px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            color: var(--light-color);
+            font-size: 32px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step:nth-child(2) .step-number {
+            background-color: var(--secondary-color);
+        }
+        
+        .step:nth-child(3) .step-number {
+            background-color: var(--accent-color);
+        }
+        
+        .step:nth-child(4) .step-number {
+            background-color: #2A75CB;
+        }
+        
+        .step h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .policies {
+            background-color: var(--grey-color);
+            padding: 80px 0;
+        }
+        
+        .policy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+        }
+        
+        .policy-card {
+            background-color: var(--light-color);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            height: 400px;
+            overflow-y: auto;
+        }
+        
+        .policy-card h3 {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        
+        .policy-card p, .policy-card ul {
+            margin-bottom: 20px;
+        }
+        
+        .policy-card ul {
+            padding-left: 20px;
+        }
+        
+        .policy-card li {
+            margin-bottom: 10px;
+        }
+        
+        .cta {
+            padding: 100px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #1E5EF3 0%, #0F3999 100%);
+            color: var(--light-color);
+        }
+        
+        .cta h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        
+        .cta p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+        
+        .oauth-btn {
+            display: flex;
+            align-items: center;
+            background: var(--light-color);
+            color: var(--dark-color);
+            padding: 15px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            width: fit-content;
+            transition: all 0.3s;
+        }
+        
+        .oauth-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .oauth-btn img {
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--accent-color);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+        
+        .footer-bottom p {
+            color: #888;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .process-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .process-steps::before {
+                display: none;
+            }
+            
+            .step {
+                margin-bottom: 50px;
+            }
+            
+            .policy-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">DMR<span>Tech</span></div>
+                <nav>
+                    <ul>
+                        <li><a href="#features">Recursos</a></li>
+                        <li><a href="#process">Processo</a></li>
+                        <li><a href="#policies">Políticas</a></li>
+                        <li><a href="#auth">Autenticar</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Autenticação Segura e Transparente</h1>
+            <p>Utilize sua conta Google para acessar nossos serviços de forma rápida e segura, com total transparência sobre como seus dados são utilizados.</p>
+            <a href="#auth" class="btn">Autenticar com Google</a>
+            <a href="#policies" class="btn btn-outline">Conhecer Nossas Políticas</a>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Por que escolher a DMR Tech?</h2>
+                <p>Fornecemos uma experiência de autenticação transparente e segura, respeitando sua privacidade e dados pessoais.</p>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Segurança Avançada</h3>
+                    <p>Utilizamos as mais recentes tecnologias de segurança para proteger seus dados e garantir uma autenticação segura.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👁️</div>
+                    <h3>Transparência Total</h3>
+                    <p>Explicamos claramente quais dados são coletados e como são utilizados, sem letras miúdas ou termos complexos.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Processo Simplificado</h3>
+                    <p>Autenticação rápida e sem complicações, permitindo acesso imediato aos nossos serviços.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="process" id="process">
+        <div class="container">
+            <div class="section-header">
+                <h2>Como Funciona</h2>
+                <p>Entenda o processo de autenticação OAuth do Google em nossa plataforma</p>
+            </div>
+            <div class="process-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Solicite Acesso</h3>
+                    <p>Clique no botão de autenticação com Google</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Revise Permissões</h3>
+                    <p>Verifique quais dados serão compartilhados</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Autorize</h3>
+                    <p>Confirme sua autorização na página do Google</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Acesse</h3>
+                    <p>Pronto! Você está autenticado e seguro</p>
+                </div>
